@@ -7,15 +7,36 @@ with open("model.pkl", "rb") as f:
     model = pickle.load(f)
 
 def predict(exp, skills, edu, projects, internship, communication):
+    # Prevent None values
+    exp = exp or 0
+    skills = skills or 0
+    edu = edu if edu is not None else 0
+    projects = projects or 0
+    internship = internship if internship is not None else 0
+    communication = communication or 1
+
     input_data = np.array([[exp, skills, edu, projects, internship, communication]])
     prediction = model.predict(input_data)[0]
 
+    score = min(
+        100,
+        int(
+            skills * 0.4
+            + exp * 5
+            + projects * 3
+            + internship * 10
+            + communication * 2
+            + edu * 5
+        )
+    )
+
     labels = {
-        2: "✅ Selected",
-        1: "🟡 Maybe",
-        0: "❌ Rejected"
+        2: "✅ Strong Hire",
+        1: "🟡 Consider",
+        0: "❌ Reject"
     }
-    return labels.get(prediction, "Unknown")
+
+    return labels[prediction], score
 
 # Corporate Tech CSS
 custom_css = """
