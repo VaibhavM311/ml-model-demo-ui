@@ -1,10 +1,25 @@
 import gradio as gr
+import pickle
+import numpy as np
 
-def demo(exp, skills, edu, projects, internship, communication):
-    return f"Candidate with {exp} yrs exp and {skills}% skills evaluated successfully!"
+# Load trained model
+with open("model.pkl", "rb") as f:
+    model = pickle.load(f)
+
+def predict(exp, skills, edu, projects, internship, communication):
+    input_data = np.array([[exp, skills, edu, projects, internship, communication]])
+    prediction = model.predict(input_data)[0]
+
+    labels = {
+        2: "✅ Selected",
+        1: "🟡 Maybe",
+        0: "❌ Rejected"
+    }
+
+    return labels.get(prediction, "Unknown")
 
 app = gr.Interface(
-    fn=demo,
+    fn=predict,
     inputs=[
         gr.Number(label="Years of Experience"),
         gr.Number(label="Skills Match (%)"),
