@@ -69,8 +69,11 @@ with gr.Blocks(
     css=custom_css
 ) as app:
 
-    gr.Markdown("# 📊 Enterprise Resume Screening Dashboard")
-    gr.Markdown("Evaluate candidate suitability with AI-powered analytics")
+    # Week 7 refined title + description
+    gr.Markdown("# 📊 AI Resume Screening SaaS Dashboard")
+    gr.Markdown(
+        "Enterprise-style ATS platform for real-time candidate evaluation, hiring decisions, and recruiter analytics."
+    )
 
     with gr.Tab("📝 Candidate Input"):
         with gr.Row():
@@ -92,6 +95,24 @@ with gr.Blocks(
 
                 submit_btn = gr.Button("🔍 Evaluate Candidate")
 
+                # Week 7 examples
+                gr.Examples(
+                    examples=[
+                        [5, 85, 1, 4, 1, 8],
+                        [2, 55, 0, 2, 0, 5],
+                        [0, 10, 0, 0, 0, 2]
+                    ],
+                    inputs=[
+                        exp,
+                        skills,
+                        edu,
+                        projects,
+                        internship,
+                        communication
+                    ],
+                    label="📌 Quick Candidate Examples"
+                )
+
             with gr.Column():
                 result_label = gr.Textbox(
                     label="🎯 Hiring Decision",
@@ -105,7 +126,6 @@ with gr.Blocks(
                     interactive=False
                 )
 
-        # Week 6 main linking task
         submit_btn.click(
             fn=predict,
             inputs=[
@@ -122,14 +142,16 @@ with gr.Blocks(
             ]
         )
 
-    with gr.Tab("ℹ️ About Inputs"):
+    with gr.Tab("ℹ️ About Dashboard"):
         gr.Markdown("""
-        ### 📌 Input Components Used
-        - **Slider** → Numerical values
-        - **Radio Buttons** → Education & Internship
-        - **Textbox + Score Bar** → Output
+        ### 📌 Features
+        - **Slider Inputs** → Candidate metrics
+        - **Radio Inputs** → Education & Internship
+        - **Hiring Decision Output**
+        - **Candidate Score Meter**
+        - **Quick Example Testing**
         
-        Designed with a **Corporate ATS Dashboard Theme**.
+        Built as an **Enterprise ATS SaaS prototype** with Gradio.
         """)
 
 app.launch()
