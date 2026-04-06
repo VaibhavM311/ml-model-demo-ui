@@ -38,6 +38,7 @@ def predict(exp, skills, edu, projects, internship, communication):
 
     return labels[prediction], score
 
+
 # Corporate Tech CSS
 custom_css = """
 .gradio-container {
@@ -56,16 +57,6 @@ h1, h2, h3, p, label {
     font-weight: bold !important;
     border: none !important;
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.35);
-}
-
-.gr-button:hover {
-    filter: brightness(1.1);
-}
-
-.gr-box, .gradio-group {
-    border-radius: 16px !important;
-    box-shadow: 0 6px 18px rgba(0,0,0,0.25);
-    border: 1px solid rgba(255,255,255,0.08);
 }
 """
 
@@ -88,11 +79,13 @@ with gr.Blocks(
                 skills = gr.Slider(0, 100, step=1, label="Skills Match (%)")
                 edu = gr.Radio(
                     [0, 1, 2],
+                    value=0,
                     label="Education Level (0=UG, 1=PG, 2=PhD)"
                 )
                 projects = gr.Slider(0, 10, step=1, label="Projects Completed")
                 internship = gr.Radio(
                     [0, 1],
+                    value=0,
                     label="Internship (0=No, 1=Yes)"
                 )
                 communication = gr.Slider(1, 10, step=1, label="Communication Skills")
@@ -100,15 +93,33 @@ with gr.Blocks(
                 submit_btn = gr.Button("🔍 Evaluate Candidate")
 
             with gr.Column():
-                output = gr.Textbox(
-                    label="🎯 Prediction Result",
+                result_label = gr.Textbox(
+                    label="🎯 Hiring Decision",
                     lines=2
                 )
 
+                score_output = gr.Slider(
+                    minimum=0,
+                    maximum=100,
+                    label="📊 Candidate Score",
+                    interactive=False
+                )
+
+        # Week 6 main linking task
         submit_btn.click(
-            predict,
-            inputs=[exp, skills, edu, projects, internship, communication],
-            outputs=output
+            fn=predict,
+            inputs=[
+                exp,
+                skills,
+                edu,
+                projects,
+                internship,
+                communication
+            ],
+            outputs=[
+                result_label,
+                score_output
+            ]
         )
 
     with gr.Tab("ℹ️ About Inputs"):
@@ -116,9 +127,9 @@ with gr.Blocks(
         ### 📌 Input Components Used
         - **Slider** → Numerical values
         - **Radio Buttons** → Education & Internship
-        - **Textbox Output** → Prediction result
+        - **Textbox + Score Bar** → Output
         
-        Designed with a **Corporate ATS Dashboard Theme** for a professional user experience.
+        Designed with a **Corporate ATS Dashboard Theme**.
         """)
 
 app.launch()
